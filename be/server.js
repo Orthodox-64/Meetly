@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
 
 app.post('/api/send-email', async (req, res) => {
   try {
-    const { recipients, subject, content } = req.body;
+    const { recipients, subject, content, htmlContent } = req.body;
 
     if (!recipients || recipients.length === 0) {
       return res.status(400).json({ error: 'No recipients provided' });
@@ -30,6 +30,9 @@ app.post('/api/send-email', async (req, res) => {
     if (!content || content.trim().length === 0) {
       return res.status(400).json({ error: 'No content provided' });
     }
+
+    // Use HTML content if provided, otherwise convert plain text
+    const emailContent = htmlContent || content.replace(/\n/g, '<br>');
 
     const mailOptions = {
       from: 'QuickCourt <noreply@quickcourt.com>',
@@ -40,8 +43,8 @@ app.post('/api/send-email', async (req, res) => {
           <h2 style="color: #333; border-bottom: 2px solid #333; padding-bottom: 10px;">
             Meeting Summary
           </h2>
-          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            ${content.replace(/\n/g, '<br>')}
+          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; line-height: 1.6;">
+            ${emailContent}
           </div>
           <p style="color: #666; font-size: 14px; margin-top: 30px;">
             This summary was generated using AI-powered meeting analysis.
