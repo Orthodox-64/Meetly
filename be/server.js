@@ -35,7 +35,7 @@ app.post('/api/send-email', async (req, res) => {
     const emailContent = htmlContent || content.replace(/\n/g, '<br>');
 
     const mailOptions = {
-      from: 'QuickCourt <noreply@quickcourt.com>',
+      from: 'Meetly<noreply@meetly.com>',
       to: recipients.join(', '),
       subject: subject || 'Meeting Summary',
       html: `
